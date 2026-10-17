@@ -44,7 +44,7 @@ export function DashboardView() {
       </div>
       <div className="grid gap-4 lg:grid-cols-2 [&>*]:min-w-0">
         <section className="rounded-lg border border-line bg-surface" aria-labelledby="wl-h">
-          <h2 id="wl-h" className="flex items-center gap-2 border-b border-line px-4 py-3 font-bold"><Star size={16} aria-hidden className="text-warn" /> لیست پیگیری</h2>
+          <h2 id="wl-h" className="flex items-center gap-2 whitespace-nowrap border-b border-line px-4 py-3 font-bold"><Star size={16} aria-hidden className="text-warn" /> لیست پیگیری</h2>
           {account.watchlist.length === 0 ? <EmptyState title="لیست پیگیری خالی است" hint="در صفحه بازارها با ستاره، بازارهای موردنظر را اضافه کنید." action={<ButtonLink href="/markets" size="sm" variant="outline">رفتن به بازارها</ButtonLink>} /> : (
             <ul data-testid="watchlist">
               {account.watchlist.map((id) => { const t = tickers.find((x) => x.pair === id); const p = getPair(id); if (!t || !p) return null; return (

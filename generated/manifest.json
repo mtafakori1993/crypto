@@ -4,13 +4,13 @@
       "status": "failed",
       "model": "google/gemini-nano-banana-2.1",
       "error": "HTTP 429: {\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemini-nano-banana-2.1 is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate",
-      "at": "2026-10-17T19:02:42.340Z"
+      "at": "2026-10-17T19:10:30.556Z"
     },
     "empty-orders": {
       "status": "failed",
       "model": "google/gemini-nano-banana-2.1",
       "error": "HTTP 429: {\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemini-nano-banana-2.1 is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate",
-      "at": "2026-10-17T19:02:43.345Z"
+      "at": "2026-10-17T19:18:20.186Z"
     }
   }
 }

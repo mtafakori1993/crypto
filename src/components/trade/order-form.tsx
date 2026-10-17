@@ -185,7 +185,7 @@ export function OrderForm({ pair, picked }: { pair: string; picked: PickedLevel 
         <Button type="submit" variant={isBuy ? "buy" : "sell"} size="lg" className="w-full" disabled={busy || !hydrated} data-testid="submit-order">
           {isBuy ? "خرید" : "فروش"} {info.base} {type === "market" ? "(بازار)" : "(حدی)"}
         </Button>
-        <p className="text-center text-[11px] text-muted">سفارش فقط در محیط شبیه‌سازی ثبت می‌شود.</p>
+        <p className="text-center text-[11px] text-muted max-sm:text-[10.5px] sm:whitespace-nowrap">سفارش فقط در محیط شبیه‌سازی ثبت می‌شود.</p>
       </form>
       <Modal
         open={confirm}

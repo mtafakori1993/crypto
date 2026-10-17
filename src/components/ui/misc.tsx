@@ -8,7 +8,7 @@ import { formatPercent } from "@/lib/format";
 
 export function Badge({ children, tone = "neutral", className }: { children: ReactNode; tone?: "neutral" | "up" | "down" | "warn" | "accent"; className?: string }) {
   const tones = { neutral: "bg-raised text-muted border-line", up: "bg-up-soft text-up border-transparent", down: "bg-down-soft text-down border-transparent", warn: "bg-warn-soft text-warn border-transparent", accent: "bg-accent-soft text-accent-strong border-transparent" };
-  return <span className={cn("inline-flex items-center gap-1 rounded-sm border px-1.5 py-0.5 text-xs leading-5", tones[tone], className)}>{children}</span>;
+  return <span className={cn("inline-flex items-center gap-1 whitespace-nowrap rounded-sm border px-1.5 py-0.5 text-xs leading-5", tones[tone], className)}>{children}</span>;
 }
 
 export function Skeleton({ className }: { className?: string }) {
@@ -107,7 +107,7 @@ export function Tab({ value, children, className }: { value: string; children: R
   return (
     <RTabs.Trigger
       value={value}
-      className={cn("relative h-11 shrink-0 px-3.5 text-sm text-muted transition-colors hover:text-text data-[state=active]:text-text data-[state=active]:after:absolute data-[state=active]:after:inset-x-2 data-[state=active]:after:bottom-0 data-[state=active]:after:h-0.5 data-[state=active]:after:rounded data-[state=active]:after:bg-accent", className)}
+      className={cn("relative h-11 shrink-0 whitespace-nowrap px-3.5 text-sm text-muted transition-colors hover:text-text data-[state=active]:text-text data-[state=active]:after:absolute data-[state=active]:after:inset-x-2 data-[state=active]:after:bottom-0 data-[state=active]:after:h-0.5 data-[state=active]:after:rounded data-[state=active]:after:bg-accent", className)}
     >
       {children}
     </RTabs.Trigger>
