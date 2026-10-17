@@ -1,0 +1,85 @@
+# Namespace-per-product, same pattern as shomaaa/cosmetics: Traefik (kube-system) terminates TLS with the ACME "le" resolver.
+apiVersion: v1
+kind: Namespace
+metadata: { name: crypto, labels: { app: crypto } }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: crypto
+  labels: { app: crypto, component: web, tier: frontend }
+spec:
+  replicas: 1   # stateless (all simulation state lives in the visitor's browser); scale freely
+  strategy: { type: RollingUpdate, rollingUpdate: { maxUnavailable: 0, maxSurge: 1 } }
+  selector:
+    matchLabels: { app: crypto, component: web }
+  template:
+    metadata:
+      labels: { app: crypto, component: web, tier: frontend }
+    spec:
+      automountServiceAccountToken: false
+      securityContext: { runAsNonRoot: true, runAsUser: 1000, runAsGroup: 1000, fsGroup: 1000, seccompProfile: { type: RuntimeDefault } }
+      containers:
+        - name: web
+          image: crypto-local/web:__WEB_TAG__
+          imagePullPolicy: IfNotPresent
+          env:
+            - { name: NEXT_PUBLIC_SITE_URL, value: "https://crypto.shomaaa.ir" }
+          ports: [{ name: http, containerPort: 3000 }]
+          startupProbe: { httpGet: { path: /api/health, port: 3000 }, periodSeconds: 2, failureThreshold: 30 }
+          readinessProbe: { httpGet: { path: /api/health, port: 3000 }, periodSeconds: 10, timeoutSeconds: 3 }
+          livenessProbe: { httpGet: { path: /api/health, port: 3000 }, periodSeconds: 20, timeoutSeconds: 3 }
+          resources: { requests: { cpu: 50m, memory: 128Mi }, limits: { cpu: 500m, memory: 384Mi } }
+          securityContext: { allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: { drop: [ALL] } }
+          volumeMounts:
+            - { name: nextcache, mountPath: /app/.next/cache }
+            - { name: tmp, mountPath: /tmp }
+      volumes:
+        - { name: nextcache, emptyDir: { sizeLimit: 256Mi } }
+        - { name: tmp, emptyDir: { sizeLimit: 64Mi } }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: web, namespace: crypto }
+spec:
+  selector: { app: crypto, component: web }
+  ports: [{ name: http, port: 80, targetPort: 3000 }]
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata: { name: security-headers, namespace: crypto }
+spec:
+  headers: { contentTypeNosniff: true, frameDeny: false, customFrameOptionsValue: SAMEORIGIN, referrerPolicy: strict-origin-when-cross-origin, stsSeconds: 31536000, stsIncludeSubdomains: false }
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: crypto
+  namespace: crypto
+  labels: { app: crypto }
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.middlewares: crypto-security-headers@kubernetescrd
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.tls.certresolver: le
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: crypto.shomaaa.ir
+      http: { paths: [{ path: /, pathType: Prefix, backend: { service: { name: web, port: { number: 80 } } } }] }
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: default-deny-ingress, namespace: crypto }
+spec: { podSelector: {}, policyTypes: [Ingress] }
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-traefik-to-web, namespace: crypto }
+spec:
+  podSelector: { matchLabels: { app: crypto, component: web } }
+  policyTypes: [Ingress]
+  ingress:
+    - from: [{ namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: kube-system } } }]
+      ports: [{ port: 3000, protocol: TCP }]

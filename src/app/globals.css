@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+/*
+ * SHOMAAA CRYPTO design tokens.
+ * Discipline follows Adobe Spectrum (4px grid, tiered type scale, explicit state tokens, 2px focus ring with offset).
+ * Implemented as a compatible custom system — no Spectrum package is installed.
+ * Theme tokens are CSS variables so dark/light switch with one attribute: [data-theme].
+ */
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0a111f;
+  --surface: #101a2e;
+  --raised: #16223b;
+  --sunken: #0c1526;
+  --line: #22304d;
+  --line-strong: #324468;
+  --text: #e8edf7;
+  --muted: #94a3bf;
+  --accent: #22c7b8;
+  --accent-strong: #5ee0d3;
+  --accent-ink: #04201d;
+  --accent-soft: rgba(34, 199, 184, 0.14);
+  --up: #2cc38b;
+  --up-soft: rgba(44, 195, 139, 0.14);
+  --down: #f2596b;
+  --down-soft: rgba(242, 89, 107, 0.14);
+  --warn: #f0b94d;
+  --warn-soft: rgba(240, 185, 77, 0.14);
+  --info: #6aa4ff;
+  --shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.55);
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f1f4f9;
+  --surface: #ffffff;
+  --raised: #f6f8fc;
+  --sunken: #e9eef6;
+  --line: #d9e0ec;
+  --line-strong: #b9c4d8;
+  --text: #0e1a30;
+  --muted: #52627f;
+  --accent: #087f77;
+  --accent-strong: #06635d;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(8, 127, 119, 0.1);
+  --up: #0b8a5d;
+  --up-soft: rgba(11, 138, 93, 0.1);
+  --down: #cf2a40;
+  --down-soft: rgba(207, 42, 64, 0.09);
+  --warn: #8a5a00;
+  --warn-soft: rgba(138, 90, 0, 0.1);
+  --info: #2257c9;
+  --shadow: 0 10px 28px -14px rgba(14, 26, 48, 0.25);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-sunken: var(--sunken);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-up: var(--up);
+  --color-up-soft: var(--up-soft);
+  --color-down: var(--down);
+  --color-down-soft: var(--down-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-info: var(--info);
+  --font-sans: var(--font-vazir), "Vazirmatn", Tahoma, system-ui, sans-serif;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-pop: var(--shadow);
+}
+
+html { background: var(--bg); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "tnum" 1;
+}
+:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 2px; border-radius: 4px; }
+::selection { background: var(--accent-soft); }
+button, [role="tab"], a { -webkit-tap-highlight-color: transparent; }
+.num { font-variant-numeric: tabular-nums; unicode-bidi: isolate; direction: ltr; text-align: right; }
+.scroll-thin { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+@keyframes flash-up { from { background: var(--up-soft); } to { background: transparent; } }
+@keyframes flash-down { from { background: var(--down-soft); } to { background: transparent; } }
+@keyframes shimmer { to { background-position: -200% 0; } }
+.skeleton { background: linear-gradient(90deg, var(--raised) 25%, var(--line) 37%, var(--raised) 63%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; border-radius: 6px; }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } * { transition-duration: 0.01ms !important; } }
+
+/* ---- Trading terminal grid: 1 column + tabs on mobile, 2 columns from lg, 3 columns from xl ---- */
+.term { display: grid; gap: 8px; grid-template-columns: minmax(0, 1fr); grid-template-areas: "tabs" "chart" "book" "trades" "form" "bottom"; }
+.term-tabs { grid-area: tabs; display: flex; border-bottom: 1px solid var(--line); }
+.term-chart { grid-area: chart; min-width: 0; }
+.term-book { grid-area: book; min-width: 0; }
+.term-trades { grid-area: trades; min-width: 0; }
+.term-form { grid-area: form; min-width: 0; align-self: start; }
+.term-bottom { grid-area: bottom; min-width: 0; }
+.term[data-tab="chart"] .term-book, .term[data-tab="chart"] .term-trades,
+.term[data-tab="book"] .term-chart, .term[data-tab="book"] .term-trades,
+.term[data-tab="trades"] .term-chart, .term[data-tab="trades"] .term-book { display: none; }
+@media (min-width: 1024px) {
+  .term { grid-template-columns: minmax(0, 1fr) 340px; grid-template-areas: "tabs form" "chart form" "book form" "trades form" "bottom form"; }
+}
+@media (min-width: 1280px) {
+  .term { grid-template-columns: minmax(0, 1fr) 270px 330px; grid-template-areas: "chart book form" "chart trades form" "bottom bottom form"; }
+  .term-tabs { display: none; }
+  .term[data-tab] .term-book, .term[data-tab] .term-trades { display: block; }
+  .term[data-tab] .term-chart { display: flex; }
+}

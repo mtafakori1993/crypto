@@ -1,0 +1,10 @@
+node_modules
+.next
+.git
+test-results
+playwright-report
+artifacts
+assets-src
+generated
+.env*
+*.log
