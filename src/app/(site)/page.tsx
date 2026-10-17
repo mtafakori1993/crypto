@@ -81,8 +81,10 @@ export default function Home() {
         <ul className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((f) => (
             <li key={f.title} className="rounded-lg border border-line bg-surface p-5">
-              <div className="mb-3 flex size-10 items-center justify-center rounded-md bg-accent-soft text-accent-strong"><f.icon size={20} aria-hidden /></div>
-              <h3 className="font-bold">{f.title}</h3>
+              <div className="flex items-center gap-3">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-accent-soft text-accent-strong"><f.icon size={20} aria-hidden /></span>
+                <h3 className="font-bold">{f.title}</h3>
+              </div>
               <p className="mt-1.5 text-sm leading-7 text-muted">{f.text}</p>
             </li>
           ))}
@@ -111,8 +113,10 @@ export default function Home() {
         <ol className="grid gap-4 md:grid-cols-3">
           {[["۱", "ورود به جلسه نمونه", "بدون رمز و اطلاعات واقعی؛ حساب نمونه با موجودی فرضی ساخته می‌شود."], ["۲", "انتخاب بازار", "بازار موردنظر را جست‌وجو کنید، به لیست پیگیری اضافه کنید و ترمینال را باز کنید."], ["۳", "ثبت سفارش شبیه‌سازی‌شده", "سفارش بازار یا حدی بگذارید و اثر آن را در پرتفوی و تاریخچه ببینید."]].map(([n, t, d]) => (
             <li key={n} className="rounded-lg border border-line bg-surface p-5">
-              <span className="flex size-9 items-center justify-center rounded-full bg-accent text-sm font-bold text-accent-ink">{n}</span>
-              <h3 className="mt-3 font-bold">{t}</h3>
+              <div className="flex items-center gap-3">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-bold text-accent-ink">{n}</span>
+                <h3 className="font-bold">{t}</h3>
+              </div>
               <p className="mt-1 text-sm leading-7 text-muted">{d}</p>
             </li>
           ))}
